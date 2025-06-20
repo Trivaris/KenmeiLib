@@ -1,0 +1,28 @@
+CREATE TABLE usersession (
+  user_id INTEGER PRIMARY KEY NOT NULL,
+  token TEXT NOT NULL,
+  username TEXT NOT NULL,
+  email TEXT NOT NULL,
+  timestamp INTEGER NOT NULL,
+  is_active INTEGER NOT NULL DEFAULT 0
+);
+
+insertOrReplace:
+    INSERT OR REPLACE INTO usersession(token, user_id, username, email, timestamp)
+    VALUES (?, ?, ?, ?, ?);
+
+setActiveByUserId:
+UPDATE usersession
+SET is_active = CASE WHEN user_id = ? THEN 1 ELSE 0 END;
+
+getByUserId:
+SELECT * FROM usersession WHERE user_id = ? LIMIT 1;
+
+getActive:
+SELECT * FROM usersession WHERE is_active = 1 LIMIT 1;
+
+logoutUser:
+DELETE FROM usersession WHERE user_id = ?;
+
+clearAll:
+DELETE FROM usersession;

@@ -1,0 +1,57 @@
+{
+  "access": "testToken",
+  "user_id": 98764,
+  "username": "TestUser",
+  "avatar": {
+    "webp": {
+      "large": "https://kenmei.b-cdn.net/covers/user/98764/avatar/webp-large-uuid.webp",
+      "small": "https://kenmei.b-cdn.net/covers/user/98764/avatar/webp-small-uuid.webp"
+    },
+    "jpeg": {
+      "large": "https://kenmei.b-cdn.net/covers/user/98764/avatar/jpeg-large-uuid.jpeg",
+      "small": "https://kenmei.b-cdn.net/covers/user/98764/avatar/jpeg-small-uuid.jpeg"
+    },
+    "gif": {
+      "large": "https://kenmei.b-cdn.net/covers/user/98764/avatar/gif-large-uuid.gif",
+      "small": "https://kenmei.b-cdn.net/covers/user/98764/avatar/gif-small-uuid.gif"
+    }
+  },
+  "banner": {
+    "webp": {
+      "large": "https://kenmei.b-cdn.net/covers/user/98764/banner/webp-large-uuid.webp",
+      "small": "https://kenmei.b-cdn.net/covers/user/98764/banner/webp-small-uuid.webp"
+    },
+    "jpeg": {
+      "large": "https://kenmei.b-cdn.net/covers/user/98764/banner/jpeg-large-uuid.jpeg",
+      "small": "https://kenmei.b-cdn.net/covers/user/98764/banner/jpeg-small-uuid.jpeg"
+    },
+    "gif": {
+      "large": "https://kenmei.b-cdn.net/covers/user/98764/banner/gif-large-uuid.gif",
+      "small": "https://kenmei.b-cdn.net/covers/user/98764/banner/gif-small-uuid.gif"
+    }
+  },
+  "email": "kenmei@test.user.com",
+  "unconfirmedEmail": null,
+  "role": "Member",
+  "features": [
+    "dark_mode",
+    "covers_grid",
+    "for_you_recommendations",
+    "animated_banner",
+    "personal_recommendations",
+    "custom_discovery",
+    "new_manga_entry_search"
+  ],
+  "hasEntries": true,
+  "hasTags": false,
+  "premium": {
+    "tier": "pro",
+    "isPastDue": false,
+    "isActive": true,
+    "hasAccount": true
+  },
+  "termsAccepted": true,
+  "privacy_level": "Public",
+  "themePreference": "single",
+  "themeMode": "dark"
+}
