@@ -1,0 +1,25 @@
+CREATE TABLE latest_chapter (
+    id INTEGER NOT NULL PRIMARY KEY,
+    url TEXT,
+    chapter_identifier TEXT,
+    volume TEXT,
+    chapter_number REAL,
+    title TEXT,
+    released_at TEXT,
+    locked INTEGER
+);
+
+getById:
+SELECT * FROM latest_chapter WHERE id = ? LIMIT 1;
+
+insertOrReplaceLatestChapter:
+INSERT OR REPLACE INTO latest_chapter (
+    id,
+    url,
+    chapter_identifier,
+    volume,
+    chapter_number,
+    title,
+    released_at,
+    locked
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?);

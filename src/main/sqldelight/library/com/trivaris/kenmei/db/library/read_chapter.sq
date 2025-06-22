@@ -1,0 +1,19 @@
+CREATE TABLE read_chapter (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    volume TEXT,
+    chapter_number REAL,
+    title TEXT
+);
+
+insertOrReplaceReadChapter:
+INSERT OR REPLACE INTO read_chapter (
+    volume,
+    chapter_number,
+    title
+) VALUES (?, ?, ?);
+
+getById:
+SELECT * FROM read_chapter WHERE id = ? LIMIT 1;
+
+lastInsertRowId:
+SELECT last_insert_rowid();

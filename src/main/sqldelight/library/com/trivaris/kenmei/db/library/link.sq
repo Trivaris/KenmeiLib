@@ -1,0 +1,17 @@
+CREATE TABLE link (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    series_url TEXT,
+    kenmei_url TEXT
+);
+
+insertOrReplaceLink:
+INSERT OR REPLACE INTO link (
+    series_url,
+    kenmei_url
+) VALUES (?, ?);
+
+getById:
+SELECT * FROM link WHERE id = ? LIMIT 1;
+
+lastInsertRowId:
+SELECT last_insert_rowid();

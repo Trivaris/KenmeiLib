@@ -1,6 +1,6 @@
 package com.trivaris.kenmei.auth
 
-import com.trivaris.kenmei.auth.models.LoginResponse
+import com.trivaris.kenmei.db.auth.AuthDatabase
 import io.ktor.client.*
 import io.ktor.client.engine.mock.*
 import io.ktor.client.plugins.contentnegotiation.*

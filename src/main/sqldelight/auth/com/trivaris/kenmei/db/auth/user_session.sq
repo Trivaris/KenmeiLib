@@ -1,0 +1,20 @@
+CREATE TABLE user_session (
+  user_id INTEGER PRIMARY KEY NOT NULL,
+  access_token TEXT NOT NULL
+);
+
+insertOrReplace:
+    INSERT OR REPLACE INTO user_session(user_id, access_token)
+    VALUES (?, ?);
+
+getByUserId:
+SELECT * FROM user_session WHERE user_id = ? LIMIT 1;
+
+getByToken:
+SELECT * FROM user_session WHERE access_token = ? LIMIT 1;
+
+logoutUser:
+DELETE FROM user_session WHERE user_id = ?;
+
+clearAll:
+DELETE FROM user_session;

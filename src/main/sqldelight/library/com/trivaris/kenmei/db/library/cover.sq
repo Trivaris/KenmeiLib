@@ -1,0 +1,22 @@
+CREATE TABLE cover(
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    large_webp TEXT,
+    small_webp TEXT,
+    large_jpeg TEXT,
+    small_jpeg TEXT
+);
+
+insertOrReplaceCover:
+INSERT OR REPLACE INTO cover (
+    large_webp,
+    small_webp,
+    large_jpeg,
+    small_jpeg
+)
+VALUES (?, ?, ?, ?);
+
+getById:
+SELECT * FROM cover WHERE id = ? LIMIT 1;
+
+lastInsertRowId:
+SELECT last_insert_rowid();

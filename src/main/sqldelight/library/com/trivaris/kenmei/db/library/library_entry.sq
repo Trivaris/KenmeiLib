@@ -1,0 +1,50 @@
+CREATE TABLE library_entry (
+    id INTEGER NOT NULL PRIMARY KEY,
+    link_id INTEGER REFERENCES link(id),
+    cover_id INTEGER REFERENCES cover(id),
+    read_chapter_id INTEGER REFERENCES read_chapter(id),
+    latest_chapter_id INTEGER REFERENCES latest_chapter(id),
+    source_chapter_id INTEGER REFERENCES source_chapter(id),
+    title TEXT,
+    manga_source_id INTEGER NOT NULL UNIQUE,
+    manga_series_id INTEGER NOT NULL,
+    user_tag_ids TEXT,
+    status INTEGER,
+    hidden INTEGER NOT NULL,
+    favourite INTEGER NOT NULL,
+    unread INTEGER NOT NULL,
+    notes TEXT,
+    score TEXT,
+    last_read_at TEXT,
+    created_at TEXT,
+    content_rating TEXT
+);
+
+insertOrReplaceLibraryEntry:
+INSERT OR REPLACE INTO library_entry (
+    id,
+    link_id,
+    cover_id,
+    read_chapter_id,
+    latest_chapter_id,
+    source_chapter_id,
+    title,
+    manga_source_id,
+    manga_series_id,
+    user_tag_ids,
+    status,
+    hidden,
+    favourite,
+    unread,
+    notes,
+    score,
+    last_read_at,
+    created_at,
+    content_rating
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+getById:
+SELECT * FROM library_entry WHERE id = ? LIMIT 1;
+
+getAllEntries:
+SELECT * FROM library_entry;

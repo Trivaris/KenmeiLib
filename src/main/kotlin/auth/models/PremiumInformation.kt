@@ -4,8 +4,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class PremiumInformation(
-    val tier: String,
-    val isPastDue: Boolean,
-    val isActive: Boolean,
-    val hasAccount: Boolean
+    val tier: String?,
+    val isPastDue: Boolean?,
+    val isActive: Boolean?,
+    val hasAccount: Boolean?,
 )
