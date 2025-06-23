@@ -1,12 +1,12 @@
-package com.trivaris.kenmei.library.models.api
+package com.trivaris.kenmei.library.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class EntryAttributes(
+data class EntryAttributesDto(
     val title: String?,
-    val cover: CoverImageInformation?,
+    val cover: CoverImageDto?,
     val status: Long?,
     val hidden: Boolean?,
     val favourite: Boolean?,
@@ -15,6 +15,6 @@ data class EntryAttributes(
     val score: String?,
     @SerialName("last_read_at") val lastReadAt: String?,
     val createdAt: String?,
-    val latestChapter: LatestChapterInformation?,
+    val latestChapter: LatestChapterDto?,
     val contentRating: String?
 )

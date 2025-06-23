@@ -1,9 +1,9 @@
-package com.trivaris.kenmei.library.models.api
+package com.trivaris.kenmei.library.dto
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Pagy(
+data class PagyDto(
     val count: Int,
     val from: Int,
     val to: Int,

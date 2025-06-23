@@ -1,9 +1,9 @@
-package com.trivaris.kenmei.library.models.api
+package com.trivaris.kenmei.library.dto
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ReadChapterInformation(
+data class ReadChapterDto(
     val volume: String?,
     val chapter: Double?,
     val title: String?,

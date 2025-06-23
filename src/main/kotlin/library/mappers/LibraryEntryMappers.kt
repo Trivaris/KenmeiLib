@@ -8,6 +8,14 @@ import com.trivaris.kenmei.library.domain.LibraryEntry as DomainLibraryEntry
 import com.trivaris.kenmei.library.domain.Links as DomainLinks
 import com.trivaris.kenmei.library.domain.MangaSourceChapter as DomainMangaSourceChapter
 import com.trivaris.kenmei.library.domain.ReadChapter as DomainReadChapter
+import com.trivaris.kenmei.library.dto.CoverImageDto
+import com.trivaris.kenmei.library.dto.CoverImageUrlsDto
+import com.trivaris.kenmei.library.dto.EntryAttributesDto
+import com.trivaris.kenmei.library.dto.LatestChapterDto
+import com.trivaris.kenmei.library.dto.LibraryEntryDto
+import com.trivaris.kenmei.library.dto.LinksDto
+import com.trivaris.kenmei.library.dto.MangaSourceChapterInfoDto
+import com.trivaris.kenmei.library.dto.ReadChapterDto
 import com.trivaris.kenmei.library.models.api.CoverImageInformation
 import com.trivaris.kenmei.library.models.api.CoverImageUrls
 import com.trivaris.kenmei.library.models.api.EntryAttributes as EntryAttributesDto
@@ -54,12 +62,12 @@ fun EntryAttributesDto.toDomain(): DomainEntryAttributes = DomainEntryAttributes
     contentRating = contentRating
 )
 
-fun CoverImageInformation.toDomain(): DomainCoverImage = DomainCoverImage(
+fun CoverImageDto.toDomain(): DomainCoverImage = DomainCoverImage(
     webp = webp.toDomain(),
     jpeg = jpeg.toDomain()
 )
 
-fun CoverImageUrls.toDomain(): DomainCoverImageUrls = DomainCoverImageUrls(
+fun CoverImageUrlsDto.toDomain(): DomainCoverImageUrls = DomainCoverImageUrls(
     large = large,
     small = small
 )
@@ -69,13 +77,13 @@ fun LinksDto.toDomain(): DomainLinks = DomainLinks(
     mangaSeriesUrl = mangaSeriesUrl
 )
 
-fun ReadChapterInformation.toDomain(): DomainReadChapter = DomainReadChapter(
+fun ReadChapterDto.toDomain(): DomainReadChapter = DomainReadChapter(
     volume = volume,
     chapter = chapter,
     title = title
 )
 
-fun LatestChapterInformation.toDomain(): DomainLatestChapter = DomainLatestChapter(
+fun LatestChapterDto.toDomain(): DomainLatestChapter = DomainLatestChapter(
     id = id,
     url = url,
     chapterIdentifier = chapterIdentifier,
@@ -86,7 +94,7 @@ fun LatestChapterInformation.toDomain(): DomainLatestChapter = DomainLatestChapt
     locked = locked
 )
 
-fun MangaSourceChapterInformation.toDomain(): DomainMangaSourceChapter = DomainMangaSourceChapter(
+fun MangaSourceChapterInfoDto.toDomain(): DomainMangaSourceChapter = DomainMangaSourceChapter(
     id = id,
     url = url,
     chapterIdentifier = chapterIdentifier,
