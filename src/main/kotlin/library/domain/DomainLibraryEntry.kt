@@ -11,7 +11,7 @@ data class CoverImage(
     val jpeg: CoverImageUrls
 )
 
-/** Domain representation of a chapter */
+/** Domain representation of the latest read chapter of a series */
 data class ReadChapter(
     val volume: String?,
     val chapter: Double?,

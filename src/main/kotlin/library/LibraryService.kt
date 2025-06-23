@@ -5,6 +5,7 @@ import com.trivaris.kenmei.auth.models.MangaEntryUpdate
 import com.trivaris.kenmei.auth.models.MangaEntryWrapper
 import com.trivaris.kenmei.core.KenmeiConfigProvider
 import com.trivaris.kenmei.db.library.LibraryDatabase
+import com.trivaris.kenmei.library.domain.MangaSourceChapter
 import com.trivaris.kenmei.library.domain.LibraryEntry as DomainLibraryEntry
 import com.trivaris.kenmei.library.mappers.toDomain
 import com.trivaris.kenmei.library.dto.CoverImageDto
@@ -73,13 +74,6 @@ class LibraryService(
             expectSuccess = true
         }.body<LibraryResponseDto>()
 
-    suspend fun markLatestChapterRead(mangaId: Long) {
-        val series = db.library_entryQueries.getById(mangaId).executeAsOneOrNull()
-        series?.latest_chapter_id?.let {
-            markChapterRead(mangaId, it)
-        }
-    }
-
     fun getAll(): List<DomainLibraryEntry> =
         db.library_entryQueries.getAllEntries().executeAsList().map { entry ->
             val link = entry.link_id?.let { db.linkQueries.getById(it).executeAsOneOrNull() }
@@ -89,6 +83,13 @@ class LibraryService(
             val source = entry.source_chapter_id?.let { db.source_chapterQueries.getById(it).executeAsOneOrNull() }
             entry.toDomain(link, cover, read, latest, source)
         }
+
+    suspend fun markLatestChapterRead(mangaId: Long) {
+        val series = db.library_entryQueries.getById(mangaId).executeAsOneOrNull()
+        series?.latest_chapter_id?.let {
+            markChapterRead(mangaId, it)
+        }
+    }
 
     suspend fun markChapterRead(mangaId: Long, sourceChapterId: Long) {
         client.request {
@@ -133,7 +134,7 @@ class LibraryService(
         return response
     }
 
-    suspend fun insertLibraryEntry(entry: LibraryEntryDto) = withContext(Dispatchers.IO) {
+    private suspend fun insertLibraryEntry(entry: LibraryEntryDto) = withContext(Dispatchers.IO) {
         db.transaction {
             val linksId = entry.links
                 ?.let { insertLinks(it) }

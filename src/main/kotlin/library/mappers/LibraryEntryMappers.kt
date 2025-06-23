@@ -16,18 +16,8 @@ import com.trivaris.kenmei.library.dto.LibraryEntryDto
 import com.trivaris.kenmei.library.dto.LinksDto
 import com.trivaris.kenmei.library.dto.MangaSourceChapterInfoDto
 import com.trivaris.kenmei.library.dto.ReadChapterDto
-import com.trivaris.kenmei.library.models.api.CoverImageInformation
-import com.trivaris.kenmei.library.models.api.CoverImageUrls
-import com.trivaris.kenmei.library.models.api.EntryAttributes as EntryAttributesDto
-import com.trivaris.kenmei.library.models.api.LatestChapterInformation
-import com.trivaris.kenmei.library.models.api.LibraryEntry as LibraryEntryDto
-import com.trivaris.kenmei.library.models.api.Links as LinksDto
-import com.trivaris.kenmei.library.models.api.MangaSourceChapterInformation
-import com.trivaris.kenmei.library.models.api.ReadChapterInformation
 import com.trivaris.kenmei.db.library.*
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.decodeFromString
 
 /*
  * Extension mappers between DTO, database and domain representations
