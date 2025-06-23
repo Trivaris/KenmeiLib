@@ -1,9 +1,9 @@
-package com.trivaris.kenmei.library.models.api
+package com.trivaris.kenmei.library.dto
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class MangaSourceChapterInformation(
+data class LatestChapterDto(
     val id: Long,
     val url: String?,
     val chapterIdentifier: String?,

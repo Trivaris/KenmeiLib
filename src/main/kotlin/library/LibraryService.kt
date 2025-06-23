@@ -5,16 +5,17 @@ import com.trivaris.kenmei.auth.models.MangaEntryUpdate
 import com.trivaris.kenmei.auth.models.MangaEntryWrapper
 import com.trivaris.kenmei.core.KenmeiConfigProvider
 import com.trivaris.kenmei.db.library.LibraryDatabase
-import com.trivaris.kenmei.db.library.Library_entry
-import com.trivaris.kenmei.library.models.api.CoverImageInformation
-import com.trivaris.kenmei.library.models.api.LatestChapterInformation
-import com.trivaris.kenmei.library.models.api.LibraryEntry
-import com.trivaris.kenmei.library.models.api.LibraryResponse
-import com.trivaris.kenmei.library.models.api.Links
-import com.trivaris.kenmei.library.models.api.MangaSourceChapter
-import com.trivaris.kenmei.library.models.api.MangaSourceChapterInformation
-import com.trivaris.kenmei.library.models.api.MangaSourceChaptersResponse
-import com.trivaris.kenmei.library.models.api.ReadChapterInformation
+import com.trivaris.kenmei.library.domain.LibraryEntry as DomainLibraryEntry
+import com.trivaris.kenmei.library.mappers.toDomain
+import com.trivaris.kenmei.library.dto.CoverImageDto
+import com.trivaris.kenmei.library.dto.LatestChapterDto
+import com.trivaris.kenmei.library.dto.LibraryEntryDto
+import com.trivaris.kenmei.library.dto.LibraryResponseDto
+import com.trivaris.kenmei.library.dto.LinksDto
+import com.trivaris.kenmei.library.dto.MangaSourceChapterDto
+import com.trivaris.kenmei.library.dto.MangaSourceChapterInfoDto
+import com.trivaris.kenmei.library.dto.MangaSourceChaptersResponseDto
+import com.trivaris.kenmei.library.dto.ReadChapterDto
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.expectSuccess
@@ -59,7 +60,7 @@ class LibraryService(
         logger.info("Sync complete: {} pages processed.", page)
     }
 
-    private suspend fun readPage(page: Int): LibraryResponse =
+    private suspend fun readPage(page: Int): LibraryResponseDto =
         client.request {
             method = HttpMethod.Get
             url {
@@ -70,7 +71,7 @@ class LibraryService(
             }
             header(HttpHeaders.Authorization, "Bearer ${auth.getAccessToken()}")
             expectSuccess = true
-        }.body<LibraryResponse>()
+        }.body<LibraryResponseDto>()
 
     suspend fun markLatestChapterRead(mangaId: Long) {
         val series = db.library_entryQueries.getById(mangaId).executeAsOneOrNull()
@@ -79,8 +80,15 @@ class LibraryService(
         }
     }
 
-    fun getAll(): List<Library_entry> =
-        db.library_entryQueries.getAllEntries().executeAsList()
+    fun getAll(): List<DomainLibraryEntry> =
+        db.library_entryQueries.getAllEntries().executeAsList().map { entry ->
+            val link = entry.link_id?.let { db.linkQueries.getById(it).executeAsOneOrNull() }
+            val cover = entry.cover_id?.let { db.coverQueries.getById(it).executeAsOneOrNull() }
+            val read = entry.read_chapter_id?.let { db.read_chapterQueries.getById(it).executeAsOneOrNull() }
+            val latest = entry.latest_chapter_id?.let { db.latest_chapterQueries.getById(it).executeAsOneOrNull() }
+            val source = entry.source_chapter_id?.let { db.source_chapterQueries.getById(it).executeAsOneOrNull() }
+            entry.toDomain(link, cover, read, latest, source)
+        }
 
     suspend fun markChapterRead(mangaId: Long, sourceChapterId: Long) {
         client.request {
@@ -100,7 +108,7 @@ class LibraryService(
         }
     }
 
-    private suspend fun fetchMangaChapters(mangaId: Long, saveInLibrary: Boolean): List<MangaSourceChapter> {
+    private suspend fun fetchMangaChapters(mangaId: Long, saveInLibrary: Boolean): List<MangaSourceChapterDto> {
         val response = client.request {
             method = HttpMethod.Get
             url {
@@ -114,18 +122,18 @@ class LibraryService(
             header(HttpHeaders.Authorization, "Bearer ${auth.getAccessToken()}")
             accept(ContentType.Application.Json)
             expectSuccess = true
-        }.body<MangaSourceChaptersResponse>().data
+        }.body<MangaSourceChaptersResponseDto>().data
 
         if (saveInLibrary) {
             response.forEach {
-                insertSourceChapter(it.toMangaSourceChapterInformation(), it.mangaSourceId)
+                insertSourceChapter(it.toMangaSourceChapterInfoDto(), it.mangaSourceId)
             }
         }
 
         return response
     }
 
-    suspend fun insertLibraryEntry(entry: LibraryEntry) = withContext(Dispatchers.IO) {
+    suspend fun insertLibraryEntry(entry: LibraryEntryDto) = withContext(Dispatchers.IO) {
         db.transaction {
             val linksId = entry.links
                 ?.let { insertLinks(it) }
@@ -158,13 +166,13 @@ class LibraryService(
         }
     }
 
-    private fun insertLinks(links: Links): Long =
+    private fun insertLinks(links: LinksDto): Long =
         db.linkQueries.insertOrReplaceLink(
             series_url = links.seriesUrl,
             kenmei_url = links.mangaSeriesUrl
         ).let { db.linkQueries.lastInsertRowId().executeAsOne() }
 
-    private fun insertCover(cover: CoverImageInformation): Long =
+    private fun insertCover(cover: CoverImageDto): Long =
         db.coverQueries.insertOrReplaceCover(
             large_webp = cover.webp.large,
             small_webp = cover.webp.small,
@@ -172,14 +180,14 @@ class LibraryService(
             small_jpeg = cover.jpeg.small,
         ).let { db.coverQueries.lastInsertRowId().executeAsOne() }
 
-    private fun insertReadChapter(readChapter: ReadChapterInformation): Long =
+    private fun insertReadChapter(readChapter: ReadChapterDto): Long =
         db.read_chapterQueries.insertOrReplaceReadChapter(
             volume = readChapter.volume,
             chapter_number = readChapter.chapter,
             title = readChapter.title,
         ).let { db.read_chapterQueries.lastInsertRowId().executeAsOne() }
 
-    private fun insertLatestChapter(latestChapter: LatestChapterInformation): Long =
+    private fun insertLatestChapter(latestChapter: LatestChapterDto): Long =
         db.latest_chapterQueries.insertOrReplaceLatestChapter(
             id = latestChapter.id,
             url = latestChapter.url,
@@ -192,7 +200,7 @@ class LibraryService(
         ).let { latestChapter.id }
 
     private fun insertSourceChapter(
-        sourceChapter: MangaSourceChapterInformation,
+        sourceChapter: MangaSourceChapterInfoDto,
         libraryEntryId: Long
     ): Long =
         db.source_chapterQueries.insertOrReplaceSourceChapter(
@@ -208,7 +216,7 @@ class LibraryService(
         ).let { sourceChapter.id }
 
     private fun insertManga(
-        manga: LibraryEntry,
+        manga: LibraryEntryDto,
         linksId: Long?,
         coverId: Long?,
         readChapterId: Long?,

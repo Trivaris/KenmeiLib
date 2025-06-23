@@ -1,10 +1,10 @@
-package com.trivaris.kenmei.library.models.api
+package com.trivaris.kenmei.library.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class MangaSourceChapter(
+data class MangaSourceChapterDto(
     val id: Long,
     @SerialName("manga_source_id") val mangaSourceId : Long,
     val url: String,
@@ -15,7 +15,7 @@ data class MangaSourceChapter(
     val releasedAt: String? = null,
     val locked: Boolean? = null
 ) {
-    fun toMangaSourceChapterInformation() = MangaSourceChapterInformation(
+    fun toMangaSourceChapterInfoDto() = MangaSourceChapterInfoDto(
         id = id,
         url = url,
         chapterIdentifier = chapterIdentifier,

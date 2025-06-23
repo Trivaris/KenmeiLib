@@ -1,9 +1,9 @@
-package com.trivaris.kenmei.library.models.api
+package com.trivaris.kenmei.library.dto
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class CoverImageUrls (
+data class CoverImageUrlsDto(
     val large: String,
     val small: String
 )
