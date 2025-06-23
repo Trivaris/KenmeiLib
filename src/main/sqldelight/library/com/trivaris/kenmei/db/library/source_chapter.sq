@@ -1,6 +1,6 @@
 CREATE TABLE source_chapter (
     id INTEGER NOT NULL PRIMARY KEY,
-    library_entry_id INTEGER NOT NULL REFERENCES library_entry(id),
+    library_entry_id INTEGER NOT NULL REFERENCES library_entry(id) ON DELETE CASCADE,
     url TEXT,
     chapter_identifier TEXT,
     volume TEXT,

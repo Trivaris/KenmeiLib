@@ -1,24 +1,31 @@
+-- Table holding manga entries owned by the user.
+-- Foreign keys use SET NULL so that child rows can be kept
+-- even if referenced entities are removed during sync.
 CREATE TABLE library_entry (
     id INTEGER NOT NULL PRIMARY KEY,
-    link_id INTEGER REFERENCES link(id),
-    cover_id INTEGER REFERENCES cover(id),
-    read_chapter_id INTEGER REFERENCES read_chapter(id),
-    latest_chapter_id INTEGER REFERENCES latest_chapter(id),
-    source_chapter_id INTEGER REFERENCES source_chapter(id),
+    link_id INTEGER REFERENCES link(id) ON DELETE SET NULL,
+    cover_id INTEGER REFERENCES cover(id) ON DELETE SET NULL,
+    read_chapter_id INTEGER REFERENCES read_chapter(id) ON DELETE SET NULL,
+    latest_chapter_id INTEGER REFERENCES latest_chapter(id) ON DELETE SET NULL,
+    source_chapter_id INTEGER REFERENCES source_chapter(id) ON DELETE SET NULL,
     title TEXT,
     manga_source_id INTEGER NOT NULL UNIQUE,
     manga_series_id INTEGER NOT NULL,
-    user_tag_ids TEXT,
     status INTEGER,
-    hidden INTEGER NOT NULL,
-    favourite INTEGER NOT NULL,
-    unread INTEGER NOT NULL,
+    hidden INTEGER NOT NULL DEFAULT 0,
+    favourite INTEGER NOT NULL DEFAULT 0,
+    unread INTEGER NOT NULL DEFAULT 0,
     notes TEXT,
     score TEXT,
     last_read_at TEXT,
     created_at TEXT,
     content_rating TEXT
 );
+
+-- Indexes to speed up frequent lookups
+CREATE INDEX IF NOT EXISTS library_entry_status_idx ON library_entry(status);
+CREATE INDEX IF NOT EXISTS library_entry_favourite_idx ON library_entry(favourite);
+CREATE INDEX IF NOT EXISTS library_entry_unread_idx ON library_entry(unread);
 
 insertOrReplaceLibraryEntry:
 INSERT OR REPLACE INTO library_entry (
@@ -31,7 +38,6 @@ INSERT OR REPLACE INTO library_entry (
     title,
     manga_source_id,
     manga_series_id,
-    user_tag_ids,
     status,
     hidden,
     favourite,
@@ -41,10 +47,37 @@ INSERT OR REPLACE INTO library_entry (
     last_read_at,
     created_at,
     content_rating
-) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 
 getById:
 SELECT * FROM library_entry WHERE id = ? LIMIT 1;
 
-getAllEntries:
-SELECT * FROM library_entry;
+-- Returns all entries with related tables joined
+getAllEntriesWithJoins:
+SELECT library_entry.*, link.*, cover.*, read_chapter.*, latest_chapter.*, source_chapter.*,
+       (SELECT GROUP_CONCAT(tag_id) FROM library_entry_user_tag WHERE library_entry_id = library_entry.id) AS tag_ids
+FROM library_entry
+LEFT JOIN link ON library_entry.link_id = link.id
+LEFT JOIN cover ON library_entry.cover_id = cover.id
+LEFT JOIN read_chapter ON library_entry.read_chapter_id = read_chapter.id
+LEFT JOIN latest_chapter ON library_entry.latest_chapter_id = latest_chapter.id
+LEFT JOIN source_chapter ON library_entry.source_chapter_id = source_chapter.id;
+
+-- Lookup by manga series id
+getBySeriesId:
+SELECT library_entry.*, link.*, cover.*, read_chapter.*, latest_chapter.*, source_chapter.*,
+       (SELECT GROUP_CONCAT(tag_id) FROM library_entry_user_tag WHERE library_entry_id = library_entry.id) AS tag_ids
+FROM library_entry
+LEFT JOIN link ON library_entry.link_id = link.id
+LEFT JOIN cover ON library_entry.cover_id = cover.id
+LEFT JOIN read_chapter ON library_entry.read_chapter_id = read_chapter.id
+LEFT JOIN latest_chapter ON library_entry.latest_chapter_id = latest_chapter.id
+LEFT JOIN source_chapter ON library_entry.source_chapter_id = source_chapter.id
+WHERE library_entry.manga_series_id = ?;
+
+-- Convenience filters frequently used in UI
+getUnreadEntries:
+SELECT * FROM library_entry WHERE unread = 1;
+
+getFavouriteEntries:
+SELECT * FROM library_entry WHERE favourite = 1;

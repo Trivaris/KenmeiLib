@@ -1,0 +1,21 @@
+-- Join table mapping entries to tags for many-to-many relationship
+CREATE TABLE library_entry_user_tag (
+    library_entry_id INTEGER NOT NULL REFERENCES library_entry(id) ON DELETE CASCADE,
+    tag_id TEXT NOT NULL REFERENCES user_tag(id) ON DELETE CASCADE,
+    PRIMARY KEY(library_entry_id, tag_id)
+);
+
+-- Speeds up queries filtering by tag
+CREATE INDEX IF NOT EXISTS library_entry_user_tag_tag_idx ON library_entry_user_tag(tag_id);
+
+insertEntryTag:
+INSERT OR REPLACE INTO library_entry_user_tag(library_entry_id, tag_id) VALUES (?, ?);
+
+deleteTagsForEntry:
+DELETE FROM library_entry_user_tag WHERE library_entry_id = ?;
+
+getTagsForEntry:
+SELECT tag_id FROM library_entry_user_tag WHERE library_entry_id = ?;
+
+getEntriesForTag:
+SELECT library_entry_id FROM library_entry_user_tag WHERE tag_id = ?;

@@ -1,0 +1,11 @@
+-- Stores available user-defined tags
+CREATE TABLE user_tag (
+    id TEXT NOT NULL PRIMARY KEY,
+    name TEXT
+);
+
+insertOrReplaceUserTag:
+INSERT OR REPLACE INTO user_tag(id, name) VALUES (?, ?);
+
+getTagById:
+SELECT * FROM user_tag WHERE id = ? LIMIT 1;
