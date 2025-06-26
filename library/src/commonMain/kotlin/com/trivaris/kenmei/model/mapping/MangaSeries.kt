@@ -2,13 +2,14 @@ package com.trivaris.kenmei.model.mapping
 
 import com.trivaris.kenmei.db.manga.MangaDatabase
 import com.trivaris.kenmei.db.manga.Manga_series
+import com.trivaris.kenmei.model.domain.MangaCover
 import com.trivaris.kenmei.model.domain.MangaSeries
 
 fun Manga_series.toDomain(
     db: MangaDatabase
 ): MangaSeries {
-    val cover = cover_id?.let { db.manga_coverQueries.getCover(it).executeAsOneOrNull()?.toDomain() }
-    val alternativeTitles = db.manga_seriesQueries.getAlternativeNames(id).executeAsList().mapNotNull { it.title }
+    val cover = db.manga_seriesQueries.getCoverInformation(id).executeAsOneOrNull()?.toDomain() ?: MangaCover(seriesId = id)
+    val alternativeTitles = db.manga_seriesQueries.getAlternativeNames(id).executeAsList().map { it.toDomain() }
     val classifications = db.manga_seriesQueries.getClassifications(id).executeAsList().map { it.toDomain() }
     return MangaSeries(
         id = id,

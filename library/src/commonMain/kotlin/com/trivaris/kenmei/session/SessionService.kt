@@ -1,12 +1,12 @@
 package com.trivaris.kenmei.session
 
 import co.touchlab.kermit.Logger
-import com.trivaris.kenmei.session.models.JwtToken
-import com.trivaris.kenmei.session.models.LoginPayload
-import com.trivaris.kenmei.session.models.LoginRequest
-import com.trivaris.kenmei.session.models.LoginRequestWrapper
+import com.trivaris.kenmei.model.types.JwtToken
+import com.trivaris.kenmei.model.dto.LoginDto
 import com.trivaris.kenmei.config.KenmeiConfigProvider
 import com.trivaris.kenmei.db.session.SessionDatabase
+import com.trivaris.kenmei.model.dto.LoginRequestDto
+import com.trivaris.kenmei.model.dto.LoginRequestRootDto
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.plugins.*
@@ -79,7 +79,7 @@ class SessionService(
         updateAuth(payload)
     }
 
-    private suspend fun requestRenewToken(oldToken: String): LoginPayload {
+    private suspend fun requestRenewToken(oldToken: String): LoginDto {
         Logger.d("Sending token refresh request.")
         return client.request {
             method = HttpMethod.Post
@@ -94,7 +94,7 @@ class SessionService(
         }.body()
     }
 
-    private suspend fun requestNewToken(email: String, password: String): LoginPayload {
+    private suspend fun requestNewToken(email: String, password: String): LoginDto {
         Logger.d("Sending login request for email=$email")
         return client.request {
             method = HttpMethod.Post
@@ -105,8 +105,8 @@ class SessionService(
             }
             contentType(ContentType.Application.Json)
             setBody(
-                LoginRequestWrapper(
-                    user = LoginRequest(
+                LoginRequestRootDto(
+                    user = LoginRequestDto(
                         login = email,
                         password = password
                     )
@@ -116,7 +116,7 @@ class SessionService(
         }.body()
     }
 
-    private fun updateAuth(loginPayload: LoginPayload, setActive: Boolean = true) {
+    private fun updateAuth(loginPayload: LoginDto, setActive: Boolean = true) {
         val token = loginPayload.access
         val tokenInfo = JwtToken.fromEncodedString(token)
 

@@ -13,5 +13,5 @@ data class EntryChapterDto(
     val chapterNumber: Double?,
     val title: String?,
     val releasedAt: String?,
-    val locked: Boolean,
+    val locked: Boolean?,
 )

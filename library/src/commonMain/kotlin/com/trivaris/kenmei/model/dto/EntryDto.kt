@@ -16,6 +16,4 @@ data class EntryDto(
     val links: EntryLinksDto?,
     val readChapter: EntryReadChapterDto?,
     val mangaSourceChapter: EntryChapterDto?,
-
-    )
-
+)

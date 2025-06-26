@@ -13,7 +13,7 @@ CREATE TABLE manga_chapter (
 getChapter:
 SELECT * FROM manga_chapter WHERE id = :id;
 
-insertOrReplaceChapter:
+insertChapter:
 INSERT OR REPLACE INTO manga_chapter (
     id,
     url,

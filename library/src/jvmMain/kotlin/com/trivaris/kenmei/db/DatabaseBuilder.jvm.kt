@@ -36,10 +36,11 @@ actual class DatabaseBuilder<T : Transacter> actual constructor(
             DatabaseStore.IN_MEMORY -> JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)
             DatabaseStore.PERSIST -> {
                 require(!path.isNullOrBlank()) { "Database path must be set for PATH type" }
-                Logger.i("Hello World")
-                val driver = JdbcSqliteDriver("jdbc:sqlite:$path")
-                Logger.i("${resolvedSchema}")
-                resolvedSchema.create(driver)
+                val file = File(path!!)
+                file.parentFile?.mkdirs()
+                val driver = JdbcSqliteDriver("jdbc:sqlite:${file.absolutePath}")
+                if (!file.exists())
+                    resolvedSchema.create(driver)
                 driver
             }
         }

@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class SeriesClassificationDto(
-    val id: Long?,
+    val id: Long,
     val category: String?,
     val name: String?,
 )

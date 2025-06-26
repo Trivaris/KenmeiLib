@@ -1,17 +1,15 @@
 -- Table: manga_user_tag
 CREATE TABLE manga_user_tag (
-    id              INTEGER NOT NULL,
+    id              INTEGER PRIMARY KEY,
     name            TEXT,
     description     TEXT,
-    entry_count     INTEGER,
-
-    PRIMARY KEY(id)
+    entry_count     INTEGER
 );
 
 getTag:
 SELECT * FROM manga_user_tag WHERE id = :id;
 
-insertOrReplaceUserTag:
+insertUserTag:
 INSERT OR REPLACE INTO manga_user_tag (
     id, name, description, entry_count
 ) VALUES (

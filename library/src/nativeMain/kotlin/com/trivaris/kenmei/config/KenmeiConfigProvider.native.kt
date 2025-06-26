@@ -2,7 +2,6 @@ package com.trivaris.kenmei.config
 
 import com.trivaris.kenmei.config.model.KenmeiConfig
 import com.trivaris.kenmei.config.model.KenmeiConfigJson
-import com.trivaris.kenmei.config.model.Preferences
 import kotlinx.atomicfu.atomic
 import kotlinx.io.errors.IOException
 import okio.FileSystem

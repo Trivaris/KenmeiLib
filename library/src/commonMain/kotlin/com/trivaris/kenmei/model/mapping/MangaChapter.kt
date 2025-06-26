@@ -27,6 +27,6 @@ fun EntryChapterDto.toDomain() =
         chapterNumber = chapterNumber,
         title = title,
         releasedAt = releasedAt,
-        locked = locked
+        locked = locked ?: false
     )
 

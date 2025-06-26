@@ -19,7 +19,6 @@ sqldelight {
         create("MangaDatabase") {
             packageName.set("com.trivaris.kenmei.db.manga")
             srcDirs(listOf("src/commonMain/sqldelight/manga"))
-            deriveSchemaFromMigrations.set(true)
             schemaOutputDirectory.set(
                 file("src/commonMain/sqldelight/databases/manga")
             )
@@ -28,7 +27,6 @@ sqldelight {
         create("SessionDatabase") {
             packageName.set("com.trivaris.kenmei.db.session")
             srcDirs(listOf("src/commonMain/sqldelight/session"))
-            deriveSchemaFromMigrations.set(true)
             schemaOutputDirectory.set(
                 file("src/commonMain/sqldelight/databases/session")
             )

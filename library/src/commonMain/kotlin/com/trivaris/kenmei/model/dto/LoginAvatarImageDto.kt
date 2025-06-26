@@ -1,9 +1,9 @@
-package com.trivaris.kenmei.session.models
+package com.trivaris.kenmei.model.dto
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class AvatarImageUrls(
+data class LoginAvatarImageDto(
     val large: String?,
     val small: String?,
 )

@@ -13,7 +13,7 @@ data class PagyDto(
     val prev: Int?,
     @SerialName("scaffold_url")
     val scaffoldUrl: String?,
-    val series: List<Int>?,
+    val series: List<String>?,
     val to: Int?,
     val items: Int?
 )

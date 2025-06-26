@@ -1,4 +1,4 @@
-package com.trivaris.kenmei.session.models
+package com.trivaris.kenmei.model.types
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -26,8 +26,8 @@ data class JwtToken(
         fun fromEncodedString(token: String): JwtToken {
             val parts = token.split(".")
             require(parts.size >= 2) { "Invalid JWT format" }
-            println(token)
-            val payload = Base64.UrlSafe.decode(parts[1].encodeToByteArray()).decodeToString()
+            val decoder = Base64.UrlSafe.withPadding(Base64.PaddingOption.ABSENT)
+            val payload = decoder.decode(parts[1].encodeToByteArray()).decodeToString()
             return Json.decodeFromString<JwtToken>(payload)
         }
     }

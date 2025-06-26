@@ -6,6 +6,7 @@ import com.trivaris.kenmei.config.KenmeiConfigProvider
 import com.trivaris.kenmei.db.manga.MangaDatabase
 import com.trivaris.kenmei.model.dto.EntryDto
 import com.trivaris.kenmei.model.dto.EntryRootDto
+import com.trivaris.kenmei.model.dto.SeriesClassificationRootDto
 import com.trivaris.kenmei.model.dto.SourceSiteRootDto
 import com.trivaris.kenmei.model.dto.UserTagDto
 import com.trivaris.kenmei.model.mapping.toDomain
@@ -40,11 +41,16 @@ class MangaService(
             site.insert(db)
             Logger.i("Inserting Source Site ${site.name}")
         }
+        val classifications = getClassifications()
+        classifications?.forEach {
+            val classification = it.toDomain()
+            classification.insert(db)
+        }
         val entries = getEntries()
         entries.forEach {
             val entry = it.toDomain(db)
             entry.insert(db)
-            Logger.i("Inserting Entry ${entry.source?.name}")
+            Logger.i("Inserting Entry ${it.attributes?.title}")
         }
     }
 
@@ -71,6 +77,18 @@ class MangaService(
             header(HttpHeaders.Authorization, "Bearer ${auth.getAccessToken()}")
             expectSuccess = true
         }.body<SourceSiteRootDto>().data
+
+    private suspend fun getClassifications() =
+        client.request {
+            method = HttpMethod.Get
+            url {
+                protocol = URLProtocol.HTTPS
+                host = config.baseUrl.host
+                encodedPath = "api/v1/series_classifications"
+            }
+            header(HttpHeaders.Authorization, "Bearer ${auth.getAccessToken()}")
+            expectSuccess = true
+        }.body<SeriesClassificationRootDto>().data
 
     private suspend fun getEntries(): List<EntryDto> {
         var page = 1

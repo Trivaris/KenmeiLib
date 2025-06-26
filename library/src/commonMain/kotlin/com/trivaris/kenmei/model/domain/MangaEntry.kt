@@ -27,7 +27,7 @@ data class MangaEntry(
 ): MangaObject<Manga_entry> {
     override fun insert(db: MangaDatabase) {
         val userIdNotNull = userId ?: KenmeiConfigProvider.instance.userId
-        db.manga_entryQueries.insertOrReplaceEntry(
+        db.manga_entryQueries.insertEntry(
             id = id,
             manga_source_id = source?.id,
             current_chapter_id = currentChapter?.id,
@@ -48,6 +48,9 @@ data class MangaEntry(
         )
         source?.insert(db)
         currentChapter?.insert(db)
-        userTags?.forEach { it.insert(db) }
+        userTags?.forEach {
+            db.manga_entryQueries.addTag(id, it.id)
+            it.insert(db)
+        }
     }
 }

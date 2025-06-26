@@ -18,7 +18,7 @@ data class MangaSource(
     val chaptersCount: Long? = null,
 ): MangaObject<Manga_source> {
     override fun insert(db: MangaDatabase) {
-        db.manga_sourceQueries.insertOrReplaceSource(
+        db.manga_sourceQueries.insertSource(
             id = id,
             manga_series_id = series?.id,
             latest_chapter_id = latestChapter?.id,

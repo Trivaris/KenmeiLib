@@ -7,7 +7,7 @@ CREATE TABLE manga_classification (
     UNIQUE(category, name)
 );
 
-insertOrReplaceClassification:
+insertClassification:
 INSERT OR REPLACE INTO manga_classification (
     id,
     category,

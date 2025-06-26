@@ -12,7 +12,7 @@ data class MangaSourceSite(
     val disabled: Boolean = false,
 ): MangaObject<Manga_source_site> {
     override fun insert(db: MangaDatabase) {
-        db.manga_source_siteQueries.insertOrReplaceSourceSite(
+        db.manga_source_siteQueries.insertSourceSite(
             id = id,
             name = name,
             site_type = siteType,

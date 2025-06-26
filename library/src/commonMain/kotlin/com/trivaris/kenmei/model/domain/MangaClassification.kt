@@ -9,7 +9,7 @@ data class MangaClassification(
     val name: String? = null,
 ): MangaObject<Manga_classification> {
     override fun insert(db: MangaDatabase) {
-        db.manga_classificationQueries.insertOrReplaceClassification(
+        db.manga_classificationQueries.insertClassification(
             id = id,
             category = category,
             name = name,

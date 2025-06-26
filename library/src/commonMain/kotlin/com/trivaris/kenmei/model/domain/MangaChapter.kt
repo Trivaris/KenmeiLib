@@ -15,7 +15,7 @@ data class MangaChapter(
     val locked: Boolean = false,
 ): MangaObject<Manga_chapter> {
     override fun insert(db: MangaDatabase) {
-        db.manga_chapterQueries.insertOrReplaceChapter(
+        db.manga_chapterQueries.insertChapter(
             id = id,
             url = url,
             chapter_identifier = chapterIdentifier,

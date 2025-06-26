@@ -19,16 +19,7 @@ CREATE TABLE manga_entry (
     read_chapter_title  TEXT
 );
 
-getEntriesForUser:
-SELECT * FROM manga_entry WHERE user_id = :userId;
-
-getTags:
-SELECT manga_user_tag.*
-FROM manga_user_tag
-INNER JOIN manga_entry_user_tag ON manga_user_tag.id = manga_entry_user_tag.user_tag_id
-WHERE manga_entry_user_tag.manga_entry_id = :entryid;
-
-insertOrReplaceEntry:
+insertEntry:
 INSERT OR REPLACE INTO manga_entry(
     id,
     manga_source_id,
@@ -66,6 +57,12 @@ INSERT OR REPLACE INTO manga_entry(
     :read_chapter_number,
     :read_chapter_title
 );
+
+getTags:
+SELECT manga_user_tag.*
+FROM manga_user_tag
+INNER JOIN manga_entry_user_tag ON manga_user_tag.id = manga_entry_user_tag.user_tag_id
+WHERE manga_entry_user_tag.manga_entry_id = :entryid;
 
 addTag:
 INSERT OR IGNORE INTO manga_entry_user_tag (

@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class EntryReadChapterDto(
-    val volume: Long?,
-    val chapter: Long?,
+    val volume: Double?,
+    val chapter: Double?,
     val title: String?,
 )

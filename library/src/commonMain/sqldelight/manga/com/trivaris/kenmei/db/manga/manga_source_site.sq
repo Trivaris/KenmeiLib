@@ -9,13 +9,10 @@ CREATE TABLE manga_source_site (
     PRIMARY KEY(id)
 );
 
-getSourceSiteById:
+getSourceSite:
 SELECT * FROM manga_source_site WHERE id = ?;
 
-getAllSourceSites:
-SELECT * FROM manga_source_site;
-
-insertOrReplaceSourceSite:
+insertSourceSite:
 INSERT OR REPLACE INTO manga_source_site(
     id,
     name,

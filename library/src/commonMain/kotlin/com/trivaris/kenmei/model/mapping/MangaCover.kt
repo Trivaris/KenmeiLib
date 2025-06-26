@@ -5,7 +5,7 @@ import com.trivaris.kenmei.model.domain.MangaCover
 
 fun Manga_cover.toDomain() =
     MangaCover(
-        id = id,
+        seriesId = manga_series_id,
         largeWebpUrl = large_webp_url,
         largeJpegUrl = large_jpeg_url,
         smallWebpUrl = small_webp_url,

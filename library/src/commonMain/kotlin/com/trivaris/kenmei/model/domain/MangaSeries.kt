@@ -19,11 +19,11 @@ data class MangaSeries (
     val malID: Long? = null,
     val usersTracking: Long? = null,
     val cover: MangaCover? = null,
-    val alternativeTitles: List<String>? = null,
+    val alternativeTitles: List<MangaAlternativeTitle>? = null,
     val classifications: List<MangaClassification>? = null,
 ): MangaObject<Manga_series> {
     override fun insert(db: MangaDatabase) {
-        db.manga_seriesQueries.insertOrReplaceSeries(
+        db.manga_seriesQueries.insertSeries(
             id = id,
             url = url,
             slug = slug,
@@ -38,11 +38,18 @@ data class MangaSeries (
             description = description,
             mal_id = malID,
             users_tracking = usersTracking,
-            cover_id = cover?.id
         )
-        cover?.insert(db)
+        db.manga_seriesQueries.addCoverInformation(
+            manga_series_id = id,
+            large_webp_url = cover?.largeWebpUrl,
+            small_webp_url = cover?.smallWebpUrl,
+            large_jpeg_url = cover?.largeJpegUrl,
+            small_jpeg_url = cover?.smallJpegUrl,
+            twitter_url = cover?.twitterUrl,
+            open_graph_url = cover?.openGraphUrl,
+        )
         alternativeTitles?.forEach {
-            db.manga_seriesQueries.addAlternativeTitle(id, it)
+            db.manga_seriesQueries.addAlternativeTitle(id, it.title)
         }
         classifications?.forEach {
             it.insert(db)

@@ -1,10 +1,15 @@
 package com.trivaris.kenmei.model.mapping
 
+import co.touchlab.kermit.Logger
 import com.trivaris.kenmei.config.KenmeiConfigProvider
 import com.trivaris.kenmei.db.manga.MangaDatabase
 import com.trivaris.kenmei.db.manga.Manga_entry
+import com.trivaris.kenmei.model.domain.MangaChapter
+import com.trivaris.kenmei.model.domain.MangaCover
 import com.trivaris.kenmei.model.domain.MangaEntry
+import com.trivaris.kenmei.model.domain.MangaSeries
 import com.trivaris.kenmei.model.domain.MangaSource
+import com.trivaris.kenmei.model.domain.MangaUserTag
 import com.trivaris.kenmei.model.dto.EntryDto
 import com.trivaris.kenmei.model.types.toBoolean
 
@@ -14,7 +19,7 @@ fun Manga_entry.toDomain(
     val source =
         manga_source_id?.let { db.manga_sourceQueries.getSource(it).executeAsOneOrNull()?.toDomain(db) ?: MangaSource( id = manga_source_id ) }
     val currentChapter =
-        current_chapter_id?.let { db.manga_chapterQueries.getChapter(it).executeAsOne() }?.toDomain()
+        current_chapter_id?.let { db.manga_chapterQueries.getChapter(it).executeAsOneOrNull()?.toDomain() ?: MangaChapter(id = it) }
     val userTags =
         db.manga_entryQueries.getTags(id).executeAsList().map { it.toDomain() }
 
@@ -43,15 +48,56 @@ fun Manga_entry.toDomain(
 fun EntryDto.toDomain(
     db: MangaDatabase
 ): MangaEntry {
-    val userId = KenmeiConfigProvider.instance.userId
-    val mangaSource =
-        mangaSourceId?.let { db.manga_sourceQueries.getSource(it).executeAsOneOrNull()?.toDomain(db) ?: MangaSource(id = it) }
     val currentChapter = mangaSourceChapter?.toDomain()
-    val userTags = userTagIds?.mapNotNull { db.manga_user_tagQueries.getTag(it).executeAsOneOrNull()?.toDomain() }
+    val latestChapter = attributes?.latestChapter?.toDomain()
+    val userTags = userTagIds?.map { db.manga_user_tagQueries.getTag(it).executeAsOneOrNull()?.toDomain() ?: MangaUserTag(id = it)}
+    val userId = KenmeiConfigProvider.instance.userId.also {
+        if (it == null) Logger.w("User Id is not set while Transforming EntryDto to MangaEntry, this should not happen")
+    }
+    val cover = mangaSeriesId
+        ?.let {
+            db.manga_seriesQueries
+                .getCoverInformation(it)
+                .executeAsOneOrNull()
+                ?.toDomain()
+                ?: MangaCover(seriesId = mangaSeriesId)
+        }
+        ?.copy(
+            largeWebpUrl = attributes?.cover?.webp?.large,
+            smallWebpUrl = attributes?.cover?.webp?.small,
+            largeJpegUrl = attributes?.cover?.jpeg?.large,
+            smallJpegUrl = attributes?.cover?.jpeg?.small,
+        )
+
+    val series = mangaSeriesId
+        ?.let {
+            db.manga_seriesQueries
+                .getSeries(it)
+                .executeAsOneOrNull()
+                ?.toDomain(db)
+                ?: MangaSeries(id = it)
+        }
+        ?.copy(
+            cover = cover,
+            title = attributes?.title,
+        )
+
+    val source = mangaSourceId
+        ?.let {
+            db.manga_sourceQueries
+                .getSource(it)
+                .executeAsOneOrNull()
+                ?.toDomain(db)
+                ?: MangaSource(id = it)
+        }
+        ?.copy(
+            series = series,
+            latestChapter = latestChapter
+        )
 
     return MangaEntry(
         id = id,
-        source = mangaSource,
+        source = source,
         currentChapter = currentChapter,
         userId = userId,
         status = attributes?.status?.toLong(),
@@ -66,7 +112,7 @@ fun EntryDto.toDomain(
         kenmeiLink = links?.mangaSeriesUrl,
         userTags = userTags,
         readChapterTitle = readChapter?.title,
-        readChapterNumber = readChapter?.chapter?.toDouble(),
+        readChapterNumber = readChapter?.chapter,
         readChapterVolume = readChapter?.volume?.toString()
     )
 }

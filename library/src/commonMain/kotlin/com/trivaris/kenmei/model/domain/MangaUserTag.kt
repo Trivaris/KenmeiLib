@@ -10,7 +10,7 @@ data class MangaUserTag(
     val entryCount: Long? = null,
 ): MangaObject<Manga_user_tag> {
     override fun insert(db: MangaDatabase) {
-        db.manga_user_tagQueries.insertOrReplaceUserTag(
+        db.manga_user_tagQueries.insertUserTag(
             id = id,
             name = name,
             description = description,
