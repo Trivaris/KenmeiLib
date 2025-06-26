@@ -1,0 +1,31 @@
+-- Table: manga_source_site
+CREATE TABLE manga_source_site (
+    id          INTEGER     NOT NULL,
+    name        TEXT,
+    site_type   TEXT,
+    online      INTEGER     DEFAULT 0,
+    disabled    INTEGER     DEFAULT 0,
+
+    PRIMARY KEY(id)
+);
+
+getSourceSiteById:
+SELECT * FROM manga_source_site WHERE id = ?;
+
+getAllSourceSites:
+SELECT * FROM manga_source_site;
+
+insertOrReplaceSourceSite:
+INSERT OR REPLACE INTO manga_source_site(
+    id,
+    name,
+    site_type,
+    online,
+    disabled
+) VALUES (
+    :id,
+    :name,
+    :site_type,
+    :online,
+    :disabled
+);

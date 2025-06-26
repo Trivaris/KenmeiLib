@@ -1,0 +1,7 @@
+-- Table: manga_entry_user_tag
+CREATE TABLE manga_entry_user_tag (
+    manga_entry_id  INTEGER NOT NULL    REFERENCES manga_entry(id),
+    user_tag_id     INTEGER NOT NULL    REFERENCES manga_user_tag(id),
+
+    PRIMARY KEY (manga_entry_id, user_tag_id)
+);

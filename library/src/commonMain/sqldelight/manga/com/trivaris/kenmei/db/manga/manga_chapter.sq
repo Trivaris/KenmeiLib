@@ -1,0 +1,35 @@
+-- Table: manga_chapter
+CREATE TABLE manga_chapter (
+    id                  INTEGER PRIMARY KEY,
+    url                 TEXT,
+    chapter_identifier  TEXT,
+    volume              TEXT,
+    chapter_number      REAL,
+    title               TEXT,
+    released_at         TEXT,
+    locked              INTEGER DEFAULT 0
+);
+
+getChapter:
+SELECT * FROM manga_chapter WHERE id = :id;
+
+insertOrReplaceChapter:
+INSERT OR REPLACE INTO manga_chapter (
+    id,
+    url,
+    chapter_identifier,
+    volume,
+    chapter_number,
+    title,
+    released_at,
+    locked
+) VALUES (
+    :id,
+    :url,
+    :chapter_identifier,
+    :volume,
+    :chapter_number,
+    :title,
+    :released_at,
+    :locked
+);

@@ -1,0 +1,7 @@
+-- Table: manga_series_classification
+CREATE TABLE manga_series_classification (
+    manga_series_id     INTEGER NOT NULL    REFERENCES manga_series(id),
+    classification_id   INTEGER NOT NULL    REFERENCES manga_classification(id),
+
+    PRIMARY KEY (manga_series_id, classification_id)
+);

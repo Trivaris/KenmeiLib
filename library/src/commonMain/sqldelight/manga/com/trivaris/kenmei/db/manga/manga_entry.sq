@@ -1,0 +1,77 @@
+-- Table: manga_entry
+CREATE TABLE manga_entry (
+    id                  INTEGER PRIMARY KEY,
+    manga_source_id     INTEGER REFERENCES manga_source(id),
+    current_chapter_id  INTEGER REFERENCES manga_chapter(id),
+    user_id             INTEGER,
+    status              INTEGER,
+    hidden              INTEGER DEFAULT 0,
+    favourite           INTEGER DEFAULT 0,
+    unread              INTEGER DEFAULT 0,
+    notes               TEXT,
+    score               REAL,
+    last_read_at        TEXT,
+    created_at          TEXT,
+    series_link         TEXT,
+    kenmei_link         TEXT,
+    read_chapter_volume TEXT,
+    read_chapter_number REAL,
+    read_chapter_title  TEXT
+);
+
+getEntriesForUser:
+SELECT * FROM manga_entry WHERE user_id = :userId;
+
+getTags:
+SELECT manga_user_tag.*
+FROM manga_user_tag
+INNER JOIN manga_entry_user_tag ON manga_user_tag.id = manga_entry_user_tag.user_tag_id
+WHERE manga_entry_user_tag.manga_entry_id = :entryid;
+
+insertOrReplaceEntry:
+INSERT OR REPLACE INTO manga_entry(
+    id,
+    manga_source_id,
+    current_chapter_id,
+    user_id,
+    status,
+    hidden,
+    favourite,
+    unread,
+    notes,
+    score,
+    last_read_at,
+    created_at,
+    series_link,
+    kenmei_link,
+    read_chapter_volume,
+    read_chapter_number,
+    read_chapter_title
+) VALUES (
+    :id,
+    :manga_source_id,
+    :current_chapter_id,
+    :user_id,
+    :status,
+    :hidden,
+    :favourite,
+    :unread,
+    :notes,
+    :score,
+    :last_read_at,
+    :created_at,
+    :series_link,
+    :kenmei_link,
+    :read_chapter_volume,
+    :read_chapter_number,
+    :read_chapter_title
+);
+
+addTag:
+INSERT OR IGNORE INTO manga_entry_user_tag (
+    manga_entry_id,
+    user_tag_id
+) VALUES (
+    :entryId,
+    :userTagId
+);

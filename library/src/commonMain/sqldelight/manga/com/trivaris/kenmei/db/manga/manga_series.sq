@@ -1,0 +1,81 @@
+-- Table: manga_series
+CREATE TABLE manga_series (
+    id                      INTEGER     PRIMARY KEY ,
+    url                     TEXT,
+    slug                    TEXT,
+    title                   TEXT,
+    score                   REAL,
+    score_distribution_id   INTEGER,
+    title_en                TEXT,
+    title_en_jp             TEXT,
+    content_type            TEXT,
+    content_rating          TEXT,
+    publication_status      TEXT,
+    description             TEXT,
+    mal_id                  INTEGER,
+    users_tracking          INTEGER,
+    cover_id                INTEGER     REFERENCES manga_cover(id)
+);
+
+getSeriesById:
+SELECT * FROM manga_series WHERE id = :id;
+
+getClassifications:
+SELECT manga_classification.*
+FROM manga_classification
+INNER JOIN manga_series_classification ON manga_classification.id = manga_series_classification.classification_id
+WHERE manga_series_classification.manga_series_id = :seriesId;
+
+getAlternativeNames:
+SELECT * FROM manga_alternative_title WHERE manga_series_id = :id;
+
+insertOrReplaceSeries:
+INSERT OR REPLACE INTO manga_series(
+    id,
+    url,
+    slug,
+    title,
+    score,
+    score_distribution_id,
+    title_en,
+    title_en_jp,
+    content_type,
+    content_rating,
+    publication_status,
+    description,
+    mal_id,
+    users_tracking,
+    cover_id
+) VALUES (
+    :id,
+    :url,
+    :slug,
+    :title,
+    :score,
+    :score_distribution_id,
+    :title_en,
+    :title_en_jp,
+    :content_type,
+    :content_rating,
+    :publication_status,
+    :description,
+    :mal_id,
+    :users_tracking,
+    :cover_id
+);
+
+addClassification:
+INSERT OR IGNORE INTO manga_series_classification (
+    manga_series_id,
+    classification_id
+) VALUES (
+    :seriesId,
+    :classificationId
+);
+
+addAlternativeTitle:
+INSERT INTO manga_alternative_title (
+    manga_series_id,
+    title
+)
+VALUES (:seriesId, :title);

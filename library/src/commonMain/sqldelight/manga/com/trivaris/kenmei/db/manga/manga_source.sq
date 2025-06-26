@@ -1,0 +1,46 @@
+-- Table: manga_source
+CREATE TABLE manga_source (
+    id                  INTEGER     NOT NULL,
+    manga_series_id     INTEGER     REFERENCES manga_series(id),
+    latest_chapter_id   INTEGER     REFERENCES manga_chapter(id),
+    first_chapter_id    INTEGER     REFERENCES manga_chapter(id),
+    site_id             INTEGER     REFERENCES manga_source_site(id),
+    name                TEXT,
+    deprecated          INTEGER     DEFAULT 0,
+    site_active         INTEGER     DEFAULT 0,
+    region_locked       INTEGER     DEFAULT 0,
+    site_type           TEXT,
+    chapters_count      INTEGER,
+
+    PRIMARY KEY(id)
+);
+
+getSource:
+SELECT * FROM manga_source WHERE id = :id;
+
+insertOrReplaceSource:
+INSERT OR REPLACE INTO manga_source(
+    id,
+    manga_series_id,
+    latest_chapter_id,
+    first_chapter_id,
+    site_id,
+    name,
+    deprecated,
+    site_active,
+    region_locked,
+    site_type,
+    chapters_count
+) VALUES (
+    :id,
+    :manga_series_id,
+    :latest_chapter_id,
+    :first_chapter_id,
+    :site_id,
+    :name,
+    :deprecated,
+    :site_active,
+    :region_locked,
+    :site_type,
+    :chapters_count
+);

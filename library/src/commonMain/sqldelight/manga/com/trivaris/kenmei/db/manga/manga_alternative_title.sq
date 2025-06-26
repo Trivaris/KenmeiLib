@@ -1,0 +1,6 @@
+-- Table: manga_alternative_title
+CREATE TABLE manga_alternative_title (
+    id                  INTEGER     NOT NULL    PRIMARY KEY AUTOINCREMENT,
+    manga_series_id     INTEGER                 REFERENCES manga_series(id),
+    title               TEXT
+);

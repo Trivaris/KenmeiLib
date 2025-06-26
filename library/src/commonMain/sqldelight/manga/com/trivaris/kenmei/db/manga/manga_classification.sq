@@ -1,0 +1,19 @@
+-- Table: manga_classification
+CREATE TABLE manga_classification (
+    id          INTEGER PRIMARY KEY,
+    category    TEXT,
+    name        TEXT,
+
+    UNIQUE(category, name)
+);
+
+insertOrReplaceClassification:
+INSERT OR REPLACE INTO manga_classification (
+    id,
+    category,
+    name
+) VALUES (
+    :id,
+    :category,
+    :name
+);

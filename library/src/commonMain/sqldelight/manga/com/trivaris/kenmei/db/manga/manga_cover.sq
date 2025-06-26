@@ -1,0 +1,51 @@
+-- Table: cover
+CREATE TABLE manga_cover (
+    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+    large_webp_url  TEXT,
+    small_webp_url  TEXT,
+    large_jpeg_url  TEXT,
+    small_jpeg_url  TEXT,
+    twitter_url     TEXT,
+    open_graph_url  TEXT
+);
+
+getCover:
+SELECT * FROM manga_cover WHERE id = :id;
+
+-- Inserts without `id` for auto-increment
+insertCover:
+INSERT INTO manga_cover (
+    large_webp_url,
+    small_webp_url,
+    large_jpeg_url,
+    small_jpeg_url,
+    twitter_url,
+    open_graph_url
+) VALUES (
+    :large_webp_url,
+    :small_webp_url,
+    :large_jpeg_url,
+    :small_jpeg_url,
+    :twitter_url,
+    :open_graph_url
+);
+
+-- Updates with `id`
+updateCover:
+INSERT OR REPLACE INTO manga_cover (
+    id,
+    large_webp_url,
+    small_webp_url,
+    large_jpeg_url,
+    small_jpeg_url,
+    twitter_url,
+    open_graph_url
+) VALUES (
+    :id,
+    :large_webp_url,
+    :small_webp_url,
+    :large_jpeg_url,
+    :small_jpeg_url,
+    :twitter_url,
+    :open_graph_url
+);
