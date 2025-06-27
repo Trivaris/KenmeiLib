@@ -1,46 +1,57 @@
 package com.trivaris.kenmei.service
 
+import androidx.datastore.core.DataStore
+import androidx.datastore.core.DataStoreFactory
 import com.trivaris.kenmei.model.domain.ConfigMain
-import com.trivaris.kenmei.model.types.KenmeiConfigJson
+import com.trivaris.kenmei.model.domain.ConfigUserPreferences
 import kotlinx.atomicfu.atomic
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import kotlinx.io.errors.IOException
 import okio.FileSystem
+import okio.Path
 import okio.Path.Companion.toPath
 
 actual object KenmeiConfigProvider {
-    private const val CONFIG_PATH = "kenmei_config.json"
+    private const val CONFIG_PATH = "kenmei_config.pb"
     private val configRef = atomic<ConfigMain?>(null)
+
+    private val scope = CoroutineScope(Dispatchers.Default)
+    private val dataStore: DataStore<ConfigMain> = DataStoreFactory.create(
+        serializer = ConfigMainSerializer,
+        scope = scope,
+        produceFile = {
+            val path: Path = CONFIG_PATH.toPath()
+            path.parent?.let { FileSystem.SYSTEM.createDirectories(it) }
+            path
+        }
+    )
 
     actual val instance: ConfigMain
         get() = configRef.value ?: loadConfig().also { configRef.value = it }
 
     actual fun loadConfig(): ConfigMain {
-        val path = CONFIG_PATH.toPath()
-        return try {
-            if (FileSystem.SYSTEM.exists(path)) {
-                val content = FileSystem.SYSTEM.read(path) { readUtf8() }
-                KenmeiConfigJson.decodeFromString(ConfigMain.serializer(), content)
-            } else ConfigMain().also { saveConfig(it) }
+        val config = try {
+            runBlocking { dataStore.data.first() }
         } catch (e: IOException) {
             ConfigMain().also { saveConfig(it) }
         }
+        configRef.value = config
+        return config
     }
 
     actual fun saveConfig(config: ConfigMain) {
-        val json = KenmeiConfigJson.encodeToString(ConfigMain.serializer(), config)
-        FileSystem.SYSTEM.write(CONFIG_PATH.toPath()) {
-            writeUtf8(json)
-        }
+        runBlocking { dataStore.updateData { config } }
         configRef.value = config
     }
 
-    actual fun updatePreferences(prefs: Preferences) {
-        instance.userPreferences = prefs
-        saveConfig()
+    actual fun updatePreferences(prefs: ConfigUserPreferences) {
+        saveConfig(instance.copy(preferences = prefs))
     }
 
     actual fun switchUser(userId: Long) {
-        instance.userId = userId
-        saveConfig()
+        saveConfig(instance.copy(userId = userId))
     }
 }
