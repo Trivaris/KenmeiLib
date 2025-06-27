@@ -60,6 +60,9 @@ kotlin {
                 implementation(libs.kotlinx.datetime)
                 implementation(libs.kotlinx.io)
                 implementation(libs.kermit)
+
+                api(libs.datastore)
+                api(libs.datastore.preferences)
             }
         }
         val androidMain by getting {

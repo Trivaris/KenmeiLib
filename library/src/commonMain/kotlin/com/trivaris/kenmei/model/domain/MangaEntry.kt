@@ -1,6 +1,6 @@
 package com.trivaris.kenmei.model.domain
 
-import com.trivaris.kenmei.config.KenmeiConfigProvider
+import com.trivaris.kenmei.service.KenmeiConfigProvider
 import com.trivaris.kenmei.db.manga.MangaDatabase
 import com.trivaris.kenmei.db.manga.Manga_entry
 import com.trivaris.kenmei.model.types.toLong

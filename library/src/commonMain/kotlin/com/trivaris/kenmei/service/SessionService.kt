@@ -1,9 +1,8 @@
-package com.trivaris.kenmei.session
+package com.trivaris.kenmei.service
 
 import co.touchlab.kermit.Logger
 import com.trivaris.kenmei.model.types.JwtToken
 import com.trivaris.kenmei.model.dto.LoginDto
-import com.trivaris.kenmei.config.KenmeiConfigProvider
 import com.trivaris.kenmei.db.session.SessionDatabase
 import com.trivaris.kenmei.model.dto.LoginRequestDto
 import com.trivaris.kenmei.model.dto.LoginRequestRootDto

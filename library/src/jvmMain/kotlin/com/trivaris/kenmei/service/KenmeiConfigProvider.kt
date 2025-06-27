@@ -1,32 +1,31 @@
-package com.trivaris.kenmei.config
+package com.trivaris.kenmei.service
 
-import com.trivaris.kenmei.config.model.KenmeiConfig
-import com.trivaris.kenmei.config.model.KenmeiConfigJson
+import com.trivaris.kenmei.model.domain.ConfigMain
+import com.trivaris.kenmei.model.types.KenmeiConfigJson
 import kotlinx.atomicfu.atomic
 import java.io.File
 
 actual object KenmeiConfigProvider {
     private const val CONFIG_PATH = "data/config.json"
-    private val configRef = atomic<KenmeiConfig?>(null)
+    private val configRef = atomic<ConfigMain?>(null)
 
-    actual val instance: KenmeiConfig
+    actual val instance: ConfigMain
         get() = configRef.value ?: loadConfig().also { configRef.value = it }
 
-    actual fun loadConfig(): KenmeiConfig {
+    actual fun loadConfig(): ConfigMain {
         val file = File(CONFIG_PATH)
-        val config = if (file.exists()) {
-            KenmeiConfigJson.decodeFromString(KenmeiConfig.serializer(), file.readText())
-        } else {
-            KenmeiConfig().also { saveConfig(it) }
-        }
+        val config = if (file.exists())
+            KenmeiConfigJson.decodeFromString(ConfigMain.serializer(), file.readText())
+        else
+            ConfigMain().also { saveConfig(it) }
         configRef.value = config
         return config
     }
 
-    actual fun saveConfig(config: KenmeiConfig) {
+    actual fun saveConfig(config: ConfigMain) {
         File(CONFIG_PATH).apply {
             parentFile?.mkdirs()
-            writeText(KenmeiConfigJson.encodeToString(KenmeiConfig.serializer(), config))
+            writeText(KenmeiConfigJson.encodeToString(ConfigMain.serializer(), config))
         }
         configRef.value = config
     }

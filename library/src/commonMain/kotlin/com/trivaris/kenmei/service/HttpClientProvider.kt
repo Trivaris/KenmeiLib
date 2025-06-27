@@ -1,5 +1,6 @@
-package com.trivaris.kenmei.http
+package com.trivaris.kenmei.service
 
+import com.trivaris.kenmei.model.types.KenmeiHTTPJson
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation

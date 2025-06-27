@@ -4,7 +4,7 @@ import com.trivaris.kenmei.db.DatabaseBuilder
 import com.trivaris.kenmei.db.DatabaseStore
 import com.trivaris.kenmei.db.manga.MangaDatabase
 import com.trivaris.kenmei.db.session.SessionDatabase
-import com.trivaris.kenmei.http.HttpClientProvider
+import com.trivaris.kenmei.service.HttpClientProvider
 import kotlinx.coroutines.runBlocking
 
 fun main() {

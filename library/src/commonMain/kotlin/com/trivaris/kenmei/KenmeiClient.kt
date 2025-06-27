@@ -1,10 +1,10 @@
 package com.trivaris.kenmei
 
 import com.trivaris.kenmei.db.manga.MangaDatabase
-import com.trivaris.kenmei.session.SessionService
-import com.trivaris.kenmei.http.HttpClientProvider
+import com.trivaris.kenmei.service.SessionService
+import com.trivaris.kenmei.service.HttpClientProvider
 import com.trivaris.kenmei.db.session.SessionDatabase
-import com.trivaris.kenmei.manga.MangaService
+import com.trivaris.kenmei.service.MangaService
 import io.ktor.client.*
 
 

@@ -13,6 +13,7 @@ okio = "3.13.0"
 kermit = "2.0.4"
 mavenpublish = "0.29.0"
 atomicfu = "0.28.0"
+datastore = "1.1.7"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -35,8 +36,9 @@ kotlinx-io = { group = "org.jetbrains.kotlinx", name = "kotlinx-io", version.ref
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "datetime" }
 
 okio = { group = "com.squareup.okio", name = "okio", version.ref = "okio"}
-
 kermit = { group = "co.touchlab", name = "kermit", version.ref = "kermit"}
+datastore = { group = "androidx.datastore", name = "datastore", version.ref = "datastore" }
+datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
 
 [plugins]
 android-library = { id = "com.android.library", version.ref = "agp" }

@@ -1,8 +1,6 @@
-package com.trivaris.kenmei.manga
+package com.trivaris.kenmei.service
 
 import co.touchlab.kermit.Logger
-import com.trivaris.kenmei.session.SessionService
-import com.trivaris.kenmei.config.KenmeiConfigProvider
 import com.trivaris.kenmei.db.manga.MangaDatabase
 import com.trivaris.kenmei.model.dto.EntryDto
 import com.trivaris.kenmei.model.dto.EntryRootDto
@@ -96,7 +94,7 @@ class MangaService(
         val entries = mutableListOf<EntryDto>()
         while (page != pages) {
             val response = readDashboardPage(page)
-            Logger.i("Syncing page $page of $response.pagy.pages")
+            Logger.i("Syncing page $page of ${response.pagy?.pages}")
             response.entries?.forEach { entry ->
                 entries.add(entry)
             }

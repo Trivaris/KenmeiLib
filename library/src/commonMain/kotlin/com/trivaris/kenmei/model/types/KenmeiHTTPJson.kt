@@ -1,4 +1,4 @@
-package com.trivaris.kenmei.http
+package com.trivaris.kenmei.model.types
 
 import kotlinx.serialization.json.Json
 
